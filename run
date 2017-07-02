@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ $1 == "-b" ]
+then
+  echo "Building..."
+  ./build
+  echo "Done"
+fi
+
+qemu-system-i386 -kernel ./os_image.bin

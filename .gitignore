@@ -1,3 +1,7 @@
+tmp/
+.vscode/
+os_image.bin
+
 # Prerequisites
 *.d
 
