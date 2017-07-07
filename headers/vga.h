@@ -6,6 +6,8 @@ extern char *terminal_buffer;
 extern const int VGA_WIDTH;
 extern const int VGA_HEIGHT;
 
+extern int line_number;
+
 void clear_screen(int color);
 
 void print(char *string);

@@ -12,5 +12,6 @@ void kernel_main(void)
 	// TODO: Set the color parameter to the default background color.
 	clear_screen(BLACK);
 
-	print("This is the first piece of text in the top left corner.");
+	println("This is\nA mulitline\nMessage");
+	print("test");
 }
