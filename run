@@ -3,7 +3,7 @@
 if [ $1 == "-b" ]
 then
   echo "Building..."
-  ./build
+  make
   echo "Done"
 fi
 
