@@ -1,1 +1,6 @@
-int strlen(char *string);
+#ifndef STDIO_H
+#define STDIO_H
+
+// int printf();
+
+#endif

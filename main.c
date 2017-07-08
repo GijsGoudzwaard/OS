@@ -10,14 +10,7 @@ void kernel_main(void)
 {
 	// Clear the default text that is set in qemu.
 	// TODO: Set the color parameter to the default background color.
-	clear_screen(BLACK);
+	clear_screen(WHITE);
 
-	print("We ");
-	print("now ");
-	print("remember ");
-	println("the ");
-	print("last ");
-	print("location ");
-	print("of ");
-	print("text");
+	print("hai");
 }

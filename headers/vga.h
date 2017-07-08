@@ -7,4 +7,6 @@ void print(char *string);
 
 void println(char *string);
 
+void enable_cursor();
+
 #endif

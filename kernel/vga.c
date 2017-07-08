@@ -1,5 +1,6 @@
 #include "../headers/vga.h"
 #include "../headers/colors.h"
+#include "../headers/common.h"
 
 char *terminal_buffer = (char*) 0xB8000;
 
@@ -24,6 +25,17 @@ void putchar(char *string, int color, int y, int x)
   }
 }
 
+void update_cursor(int y, int x)
+{
+  unsigned short position = (y * VGA_WIDTH + x);
+  // cursor LOW port to vga INDEX register
+  outb(0x3D4, 0x0F);
+  outb(0x3D5, (unsigned char) (position & 0xFF));
+  // cursor HIGH port to vga INDEX register
+  outb(0x3D4, 0x0E);
+  outb(0x3D5, (unsigned char) ((position >> 8) & 0xFF));
+}
+
 void write_string(int color, char *string)
 {
   while (*string != 0) {
@@ -36,6 +48,8 @@ void write_string(int color, char *string)
 
     string++;
   }
+
+  update_cursor(row, col);
 }
 
 /**
@@ -68,8 +82,11 @@ void println(char *string)
  */
 void clear_screen(int color)
 {
-   for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT * 2; i++) {
+   for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
+  //  for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT * 2; i++) {
 	   terminal_buffer[i++] = ' ';
 	   terminal_buffer[i] = color;
    }
+
+   update_cursor(row, col);
 }
