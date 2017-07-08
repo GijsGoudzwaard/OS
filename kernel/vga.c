@@ -6,26 +6,35 @@ char *terminal_buffer = (char*) 0xB8000;
 const int VGA_WIDTH = 80;
 const int VGA_HEIGHT = 25;
 
-int line_number = 0;
+int row = 0;
+int col = 0;
 
 void write_string(int color, char *string)
 {
-  unsigned int i = 0;
-
-	i = (line_number*80*2);
-
   while (*string != 0) {
     if (*string == '\n') {
-      line_number++;
-      i = (line_number * 80 * 2);
-      string++;
+      row++;
+      col = 0;
     } else {
-      terminal_buffer[i] = *string;
-      string++;
-      i++;
-      terminal_buffer[i] = color;
-      i++;
+      putchar(string, color, row, col);
     }
+
+    string++;
+  }
+}
+
+void putchar(char *string, int color, int y, int x)
+{
+  int mem_location = (y * VGA_WIDTH + x) * 2;
+
+  terminal_buffer[mem_location] = *string;
+  terminal_buffer[++mem_location] = color;
+
+  // Check if we're at the end of th terminal.
+  if (++col == VGA_WIDTH) {
+    // If so set the col back to 0 and add a new line.
+    col = 0;
+    row++;
   }
 }
 
@@ -47,7 +56,8 @@ void print(char *string)
 void println(char *string)
 {
 	write_string(WHITE, string);
-  line_number++;
+  row++;
+  col = 0;
 }
 
 /**

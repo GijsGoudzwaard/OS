@@ -12,6 +12,12 @@ void kernel_main(void)
 	// TODO: Set the color parameter to the default background color.
 	clear_screen(BLACK);
 
-	println("This is\nA mulitline\nMessage");
-	print("test");
+	print("We ");
+	print("now ");
+	print("remember ");
+	print("the ");
+	print("last ");
+	print("location ");
+	print("of ");
+	print("text");
 }
