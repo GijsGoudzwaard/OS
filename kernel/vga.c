@@ -9,20 +9,6 @@ const int VGA_HEIGHT = 25;
 int row = 0;
 int col = 0;
 
-void write_string(int color, char *string)
-{
-  while (*string != 0) {
-    if (*string == '\n') {
-      row++;
-      col = 0;
-    } else {
-      putchar(string, color, row, col);
-    }
-
-    string++;
-  }
-}
-
 void putchar(char *string, int color, int y, int x)
 {
   int mem_location = (y * VGA_WIDTH + x) * 2;
@@ -35,6 +21,20 @@ void putchar(char *string, int color, int y, int x)
     // If so set the col back to 0 and add a new line.
     col = 0;
     row++;
+  }
+}
+
+void write_string(int color, char *string)
+{
+  while (*string != 0) {
+    if (*string == '\n') {
+      row++;
+      col = 0;
+    } else {
+      putchar(string, color, row, col);
+    }
+
+    string++;
   }
 }
 
@@ -56,6 +56,7 @@ void print(char *string)
 void println(char *string)
 {
 	write_string(WHITE, string);
+
   row++;
   col = 0;
 }

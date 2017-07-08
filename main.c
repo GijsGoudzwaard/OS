@@ -15,7 +15,7 @@ void kernel_main(void)
 	print("We ");
 	print("now ");
 	print("remember ");
-	print("the ");
+	println("the ");
 	print("last ");
 	print("location ");
 	print("of ");
