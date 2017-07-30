@@ -9,4 +9,6 @@ void println(char *string);
 
 void enable_cursor();
 
+void welcome_screen();
+
 #endif

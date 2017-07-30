@@ -12,5 +12,5 @@ void kernel_main(void)
 	// TODO: Set the color parameter to the default background color.
 	clear_screen(WHITE);
 
-	print("hai");
+	welcome_screen();
 }
