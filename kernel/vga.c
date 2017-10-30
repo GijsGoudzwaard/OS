@@ -18,17 +18,17 @@ int col = 0;
  */
 void putchar(char *string, int color, int x, int y)
 {
-  int mem_location = (y * VGA_WIDTH + x) * 2;
+	int mem_location = (y * VGA_WIDTH + x) * 2;
 
-  terminal_buffer[mem_location] = *string;
-  terminal_buffer[++mem_location] = color;
+	terminal_buffer[mem_location] = *string;
+	terminal_buffer[++mem_location] = color;
 
-  // Check if we're at the end of th terminal.
-  if (++col == VGA_WIDTH) {
-    // If so set the col back to 0 and add a new line.
-    col = 0;
-    row++;
-  }
+	// Check if we're at the end of th terminal.
+	if (++col == VGA_WIDTH) {
+		// If so set the col back to 0 and add a new line.
+		col = 0;
+		row++;
+	}
 }
 
 /**
@@ -40,17 +40,17 @@ void putchar(char *string, int color, int x, int y)
  */
 void update_cursor(int x, int y)
 {
-  unsigned short position = (y * VGA_WIDTH) + x;
-  // cursor LOW port to vga INDEX register
-  outb(0x3D4, 0x0F);
-  outb(0x3D5, (unsigned char) (position & 0xFF));
-  // cursor HIGH port to vga INDEX register
-  outb(0x3D4, 0x0E);
-  outb(0x3D5, (unsigned char) ((position >> 8) & 0xFF));
+	unsigned short position = (y * VGA_WIDTH) + x;
+	// cursor LOW port to vga INDEX register
+	outb(0x3D4, 0x0F);
+	outb(0x3D5, (unsigned char) (position & 0xFF));
+	// cursor HIGH port to vga INDEX register
+	outb(0x3D4, 0x0E);
+	outb(0x3D5, (unsigned char) ((position >> 8) & 0xFF));
 }
 
 /**
- * Write a string, update the cursor after the string has been written.
+ * Write a string.
  *
  * @param  int  color
  * @param  char string
@@ -58,18 +58,16 @@ void update_cursor(int x, int y)
  */
 void write_string(int color, char *string)
 {
-  while (*string != 0) {
-    if (*string == '\n') {
-      row++;
-      col = 0;
-    } else {
-      putchar(string, color, col, row);
-    }
+	while (*string != 0) {
+		if (*string == '\n') {
+			row++;
+			col = 0;
+		} else {
+			putchar(string, color, col, row);
+		}
 
-    string++;
-  }
-
-  update_cursor(col, row);
+		string++;
+	}
 }
 
 /**
@@ -93,8 +91,8 @@ void println(char *string)
 {
 	write_string(WHITE, string);
 
-  row++;
-  col = 0;
+	row++;
+	col = 0;
 }
 
 /**
@@ -105,13 +103,13 @@ void println(char *string)
  */
 void print_center(char *string)
 {
-  int x = (VGA_WIDTH / 2) - (strlen(string) / 2);
+	int x = (VGA_WIDTH / 2) - (strlen(string) / 2);
 
-  while (*string != 0) {
-    putchar(string++, WHITE, x++, row);
-  }
+	while (*string != 0) {
+		putchar(string++, WHITE, x++, row);
+	}
 
-  row++;
+	row++;
 }
 
 /**
@@ -122,30 +120,19 @@ void print_center(char *string)
  */
 void clear_screen(int color)
 {
-   for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
-	   terminal_buffer[i++] = ' ';
-	   terminal_buffer[i] = color;
-   }
+	for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
+		terminal_buffer[i++] = ' ';
+		terminal_buffer[i] = color;
+	}
 
-   update_cursor(row, col);
+	update_cursor(row, col);
 }
 
 /**
- * Set the welcome screen.
+ * Set the default cursor location (in the bottom left corner).
  *
  * @return void
  */
-void welcome_screen()
-{
-  println(" ____________________________");
-  println("< Hi there, welcome to my OS >");
-  println(" ----------------------------");
-  println("        \\   ^__^");
-  println("         \\  (oo)\\_______");
-  println("            (__)\\       )\\/\\");
-  println("                ||----w |");
-  println("                ||     ||");
-
-  // Add a new empty line to set the cursor under the welcome message.
-  println("");
+void set_default_cursor_location() {
+	update_cursor(0, VGA_HEIGHT - 1);
 }

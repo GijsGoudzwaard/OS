@@ -11,4 +11,6 @@ void enable_cursor();
 
 void welcome_screen();
 
+void set_default_cursor_location();
+
 #endif
