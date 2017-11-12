@@ -1,7 +1,5 @@
 #include "headers/vga.h"
 #include "headers/colors.h"
-#include "headers/common.h"
-#include "headers/irq.h"
 
 /**
  * Set the welcome screen.
@@ -17,7 +15,7 @@ void welcome_screen()
 	println("         \\  (oo)\\_______");
 	println("            (__)\\       )\\/\\");
 	println("                ||----w |");
-	println("                ||     ||");
+  println("                ||     ||");
 }
 
 /**
@@ -33,5 +31,5 @@ void kernel_main(void)
 
 	welcome_screen();
 
-  set_default_cursor_location();
+	set_default_cursor_location();
 }

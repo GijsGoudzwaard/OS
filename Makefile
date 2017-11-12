@@ -3,6 +3,7 @@ CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra -Woverflow -m32
 LD = $(CC) -T linker.ld
 LDFLAGS = -ffreestanding -O2 -nostdlib -lgcc
 TARGET = os_image.bin
+EMULATOR = qemu-system-i386
 
 # Find all files with a .s or .c extension
 OBJECTS = $(patsubst %.c, %.o, $(shell find . -name "*.c" -or -name "*.s"))
@@ -21,5 +22,10 @@ $(TARGET): $(OBJECTS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
+# Clean the project of object files.
 clean:
 	find . -name "*.o" -type f -delete
+
+# Compile, clean and run the project.
+run: all clean
+	$(EMULATOR) -kernel ./os_image.bin
