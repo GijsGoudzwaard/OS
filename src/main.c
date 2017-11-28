@@ -9,9 +9,9 @@
  */
 void welcome_screen()
 {
-  println(" __________________________________________");
-  println("< Hi there, welcome to my operating system >");
-  println(" ------------------------------------------");
+  println(" ____________________________________");
+  println("< Welcome to Aperture Science, Glados >");
+  println(" ------------------------------------");
   println("        \\   ^__^");
   println("         \\  (oo)\\_______");
   println("            (__)\\       )\\/\\");
