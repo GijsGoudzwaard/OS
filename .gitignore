@@ -1,3 +1,7 @@
+tmp/
+.vscode/
+os_image.bin
+
 # Prerequisites
 *.d
 
@@ -50,3 +54,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+.idea
+cmake-build-debug
+CMakeLists.txt
