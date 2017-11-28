@@ -1,20 +1,22 @@
-CC = i686-elf-gcc
-CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra -Woverflow -m32
-LD = $(CC) -T linker.ld
-LDFLAGS = -ffreestanding -O2 -nostdlib -lgcc
+CC = gcc
+CFLAGS = -fno-stack-protector -m32
+LD = ld $(LDFLAGS) -T linker.ld
+LDFLAGS = -m elf_i386
 TARGET = os_image.bin
 EMULATOR = qemu-system-i386
 
 # Find all files with a .s or .c extension
-OBJECTS = $(patsubst %.c, %.o, $(shell find . -name "*.c" -or -name "*.s"))
+OBJECTS = $(patsubst %.c, %.o, $(shell find ./src -name "*.c"))
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-  # Link all the objects together
-	$(LD) -o $@ $(LDFLAGS) $^
+	nasm -f elf32 -o kernel.o kernel.asm
 
-  # After we have our os image, delete all the object files to clean the project up
+ 	# Link all the objects together
+	$(LD) -o $@ kernel.o $^
+
+  	# After we have our os image, delete all the object files to clean the project up
 	find . -name "*.o" -type f -delete
 
 # You don't even need to be explicit here,
