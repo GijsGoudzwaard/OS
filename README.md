@@ -15,6 +15,5 @@ $ sudo apt install nasm qemu-system
 Simply clone this repo, then:
 
 ```
-$ make
-$ ./run
+$ make run
 ```
