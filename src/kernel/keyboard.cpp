@@ -4,7 +4,9 @@
 #include "../headers/common.h"
 #include "../headers/colors.h"
 
-char *row_buffer = 0;
+char *row_buffer = nullptr;
+bool caps_lock = false;
+bool shift = false;
 
 /**
  * Handles the keyboard interrupts.
@@ -15,23 +17,23 @@ char *row_buffer = 0;
 extern "C"
 void keyboard_handler_main(void)
 {
-  static uint8_t shift = 0;
   unsigned char keycode;
 
   /* write EOI */
   outb(0x20, 0x20);
-  if (keycode == SHIFT_KEY_CODE) {
-    shift = 1;
-  }
-
-  if ((keycode == SHIFT_KEY_CODE) & 0x80) {
-    shift = 0;
-  }
 
   keycode = inb(KEYBOARD_DATA_PORT);
 
+  if (keycode == SHIFT_PRESSED_KEY_CODE || keycode == SHIFT_RELEASED_KEY_CODE) {
+    shift = !shift;
+  }
+
+  if (keycode == CAPS_LOCK_KEY_CODE) {
+    caps_lock = !caps_lock;
+  }
+
   // If keypress up, don't do anything.
-  if ((keycode & KEY_UP) == KEY_UP)
+  if (keycode & KEY_UP)
     return;
 
   if (keycode < 0)
@@ -55,7 +57,7 @@ void keyboard_handler_main(void)
   char key[2] = "";
   string::append(key, keyboard_map[keycode]);
 
-  if (shift) {
+  if ((shift || caps_lock) && ! (shift && caps_lock)) {
     key[0] = keyboard_map[keycode + 90];
   }
 
