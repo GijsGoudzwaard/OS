@@ -22,12 +22,16 @@ $(TARGET): $(OBJECTS)
 # You don't even need to be explicit here,
 # compiling C files is handled automagically by Make.
 %.o: %.cpp
-	$(CC) $(CFLAGS) -std=c99 -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 # Clean the project of object files.
 clean:
 	find . -name "*.o" -type f -delete
 
+	rm -f $(TARGET)
+
 # Compile, clean and run the project.
-run: all clean
+run: all
 	$(EMULATOR) -kernel ./os_image.bin
+
+	rm -f $(TARGET)
