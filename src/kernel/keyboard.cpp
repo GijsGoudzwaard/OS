@@ -1,11 +1,8 @@
 #include "../headers/keyboard.h"
 #include "../headers/vga.h"
 #include "../headers/string.h"
-
-//extern "C" {
-  #include "../headers/common.h"
-  #include "../headers/colors.h"
-//}
+#include "../headers/common.h"
+#include "../headers/colors.h"
 
 char *row_buffer = 0;
 

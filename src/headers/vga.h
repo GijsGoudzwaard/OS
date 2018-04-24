@@ -3,13 +3,13 @@
 
 namespace vga
 {
+  void setup();
+
   void clear_screen(int color);
 
   void print(const char *string);
 
   void println(const char *string);
-
-  void welcome_screen();
 
   void print_center(char *string);
 

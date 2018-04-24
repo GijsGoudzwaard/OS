@@ -1,10 +1,7 @@
 #include "../headers/vga.h"
 #include "../headers/string.h"
-
-extern "C" {
-  #include "../headers/common.h"
-  #include "../headers/colors.h"
-}
+#include "../headers/common.h"
+#include "../headers/colors.h"
 
 /**
  * Each character takes up two bytes of space in memory.
@@ -154,6 +151,33 @@ void vga::clear_screen(int color)
   col = 0;
 
   set_cursor(row, col);
+}
+
+/**
+ * Set the welcome screen.
+ *
+ * @return void
+ */
+void welcome_screen()
+{
+  vga::println(" ____________________________________");
+  vga::println("< Welcome to Aperture Science, GLaDOS >");
+  vga::println(" ------------------------------------");
+  vga::println("        \\   ^__^");
+  vga::println("         \\  (oo)\\_______");
+  vga::println("            (__)\\       )\\/\\");
+  vga::println("                ||----w |");
+  vga::println("                ||     ||");
+}
+
+void vga::setup()
+{
+  // Clear the default text that is set in qemu.
+  // TODO: Set the color parameter to the default background color.
+  clear_screen(WHITE);
+
+  // Show the welcome screen.
+  welcome_screen();
 }
 
 /**
