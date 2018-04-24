@@ -15,7 +15,7 @@ global read_port
 global write_port
 global load_idt
 
-extern main 		;this is defined in the c file
+extern kernel_start 		;this is defined in the c file
 extern keyboard_handler_main
 
 read_port:
@@ -43,7 +43,7 @@ keyboard_handler:
 start:
 	cli 				;block interrupts
 	mov esp, stack_space
-	call main
+	call kernel_start
 	hlt 				;halt the CPU
 
 section .bss

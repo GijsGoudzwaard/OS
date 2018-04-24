@@ -1,8 +1,18 @@
 #include "../headers/vga.h"
-#include "../headers/colors.h"
-#include "../headers/common.h"
-#include "../headers/stdio.h"
+#include "../headers/string.h"
 
+extern "C" {
+  #include "../headers/common.h"
+  #include "../headers/colors.h"
+}
+
+/**
+ * Each character takes up two bytes of space in memory.
+ * The first byte is split into two segments, the forecolour, and the backcolour.
+ * The second byte is a n 8-bit ASCII value of the character to print.
+ *
+ * @var char *
+ */
 char *terminal_buffer = (char *) 0xB8000;
 
 const int VGA_WIDTH = 80;
@@ -14,16 +24,20 @@ int col = 0;
 /**
  * Put a character at a specific location in video memory.
  *
+ * @param  const char *string
+ * @param  int color
+ * @param  int x
+ * @param  int y
  * @return void
  */
-void putchar(char *string, int color, int x, int y)
+void putch(const char *string, int color, int x, int y)
 {
   int mem_location = (y * VGA_WIDTH + x) * 2;
 
   terminal_buffer[mem_location] = *string;
   terminal_buffer[++mem_location] = color;
 
-  // Check if we're at the end of th terminal.
+  // Check if we're at the end of the terminal.
   if (++col == VGA_WIDTH) {
     // If so set the col back to 0 and add a new line.
     col = 0;
@@ -53,17 +67,24 @@ void set_cursor(int x, int y)
  * Write a string.
  *
  * @param  int  color
- * @param  char string
+ * @param  const char *string
  * @return void
  */
-void write_string(int color, char *string)
+void write_string(int color, const char *string)
 {
   while (*string != 0) {
     if (*string == '\n') {
+      // New line
       row++;
       col = 0;
+    } else if (*string == '\b') {
+      // Backspace
+      if (col > 0) {
+        col--;
+        putch(" ", color, col--, row);
+      }
     } else {
-      putchar(string, color, col, row);
+      putch(string, color, col, row);
     }
 
     string++;
@@ -75,10 +96,10 @@ void write_string(int color, char *string)
 /**
  * Print a string to the terminal buffer.
  *
- * @param  char string
+ * @param  const char *string
  * @return void
  */
-void print(char *string)
+void vga::print(const char *string)
 {
   write_string(WHITE, string);
 }
@@ -86,29 +107,31 @@ void print(char *string)
 /**
  * Print a string to the terminal buffer and add a new line afterwards.
  *
- * @param  char string
+ * @param  const char *string
  * @return void
  */
-void println(char *string)
+void vga::println(const char *string)
 {
   write_string(WHITE, string);
 
   row++;
   col = 0;
+
+  set_cursor(col, row);
 }
 
 /**
  * Print a string in the middle of the screen.
  *
- * @param  char string
+ * @param  char *string
  * @return void
  */
-void print_center(char *string)
+void vga::print_center(char *string)
 {
-  int x = (VGA_WIDTH / 2) - (strlen(string) / 2);
+  int x = (VGA_WIDTH / 2) - (string::length(string) / 2);
 
   while (*string != 0) {
-    putchar(string++, WHITE, x++, row);
+    putch(string++, WHITE, x++, row);
   }
 
   row++;
@@ -120,12 +143,15 @@ void print_center(char *string)
  * @param  int color
  * @return void
  */
-void clear_screen(int color)
+void vga::clear_screen(int color)
 {
   for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
     terminal_buffer[i++] = ' ';
     terminal_buffer[i] = color;
   }
+
+  row = 0;
+  col = 0;
 
   set_cursor(row, col);
 }
@@ -135,7 +161,7 @@ void clear_screen(int color)
  *
  * @return void
  */
-void set_default_cursor_location()
+void vga::set_default_cursor_location()
 {
   set_cursor(0, VGA_HEIGHT - 1);
 

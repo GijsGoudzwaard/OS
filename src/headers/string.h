@@ -1,6 +1,13 @@
-#ifndef STRING_H
-#define STRING_H
+#ifndef OS_STRING_H
+#define OS_STRING_H
 
-int strlen(char *string);
+namespace string
+{
+  int compare(const char *string1, const char *string2);
 
-#endif
+  int length(char *string);
+
+  void append(char *string, char character);
+};
+
+#endif // OS_STRING_H

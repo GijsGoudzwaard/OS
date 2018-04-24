@@ -18,7 +18,7 @@ struct IDT_entry
 
 struct IDT_entry IDT[IDT_SIZE];
 
-void idt_init(void)
+extern "C" void idt_init(void)
 {
   unsigned long keyboard_address;
   unsigned long idt_address;
@@ -71,7 +71,7 @@ void idt_init(void)
   load_idt(idt_ptr);
 }
 
-void kb_init(void)
+extern "C" void kb_init(void)
 {
   /* 0xFD is 11111101 - enables only IRQ1 (keyboard)*/
   outb(0x21, 0xFD);

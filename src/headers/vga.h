@@ -1,14 +1,19 @@
 #ifndef VGA_H
 #define VGA_H
 
-void clear_screen(int color);
+namespace vga
+{
+  void clear_screen(int color);
 
-void print(char *string);
+  void print(const char *string);
 
-void println(char *string);
+  void println(const char *string);
 
-void welcome_screen();
+  void welcome_screen();
 
-void set_default_cursor_location();
+  void print_center(char *string);
+
+  void set_default_cursor_location();
+};
 
 #endif

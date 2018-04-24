@@ -1,12 +1,12 @@
 CC = gcc
-CFLAGS = -fno-stack-protector -m32
+CFLAGS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -m32
 LD = ld $(LDFLAGS) -T linker.ld
 LDFLAGS = -m elf_i386
 TARGET = os_image.bin
 EMULATOR = qemu-system-i386
 
-# Find all files with a .s or .c extension
-OBJECTS = $(patsubst %.c, %.o, $(shell find ./src -name "*.c"))
+# Find all files with a .c or .cpp extension
+OBJECTS = $(patsubst %.cpp, %.o, $(shell find ./src -name "*.cpp"))
 
 all: $(TARGET)
 
@@ -21,8 +21,8 @@ $(TARGET): $(OBJECTS)
 
 # You don't even need to be explicit here,
 # compiling C files is handled automagically by Make.
-%.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+%.o: %.cpp
+	$(CC) $(CFLAGS) -std=c99 -c $^ -o $@
 
 # Clean the project of object files.
 clean:
