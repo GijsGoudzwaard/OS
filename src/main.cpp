@@ -7,7 +7,8 @@
  *
  * @return void
  */
-extern "C" void kernel_start(void)
+extern "C"
+void kernel_start(void)
 {
   vga::setup();
 

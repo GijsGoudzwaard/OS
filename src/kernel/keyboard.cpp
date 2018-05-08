@@ -4,7 +4,8 @@
 #include "../headers/common.h"
 #include "../headers/colors.h"
 
-char *row_buffer = nullptr;
+// TODO: Change to char pointer once memory works
+char row_buffer[80];
 bool caps_lock = false;
 bool shift = false;
 
@@ -36,12 +37,15 @@ void keyboard_handler_main(void)
   if (keycode & KEY_UP)
     return;
 
-  if (keycode < 0)
-    return;
-
   if (keycode == ENTER_KEY_CODE) {
+//    vga::print("\n\n");
+//    vga::println(row_buffer);
+//    vga::print("\n\n");
+
     if (string::compare(row_buffer, "help") == 0) {
-      vga::println("\nclear - Clears the screen");
+      vga::println("\nAvailable commands: ");
+      vga::println("\thelp  - Shows the available commands");
+      vga::println("\tclear - Clears the screen");
     } else if (string::compare(row_buffer, "clear") == 0) {
       vga::clear_screen(WHITE);
     } else {
@@ -57,6 +61,7 @@ void keyboard_handler_main(void)
   char key[2] = "";
   string::append(key, keyboard_map[keycode]);
 
+  // Check if shift or caps lock is pressed and if not both are pressed.
   if ((shift || caps_lock) && ! (shift && caps_lock)) {
     key[0] = keyboard_map[keycode + 90];
   }

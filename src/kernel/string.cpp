@@ -1,7 +1,7 @@
 #include "../headers/string.h"
 
 /**
- * Checks if a string is equal to another string.
+ * Compare two strings, returns 0 if they are equal, 1 of string1 is bigger than string2 and -1 otherwise
  *
  * @param  const char *s1
  * @param  const char *s2
@@ -24,6 +24,7 @@ int string::compare(const char *string1, const char *string2)
 /**
  * Count the length of a string and return it.
  *
+ * @param  char *string
  * @return int
  */
 int string::length(char *string)
@@ -39,8 +40,9 @@ int string::length(char *string)
 /**
  * Append a character to a string.
  *
- * @param char *string
- * @param char character
+ * @param  char *string
+ * @param  char character
+ * @return void
  */
 void string::append(char *string, char character)
 {

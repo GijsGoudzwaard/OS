@@ -80,6 +80,11 @@ void write_string(int color, const char *string)
         col--;
         putch(" ", color, col--, row);
       }
+    } else if (*string == '\t') {
+      uint8_t i;
+      for (i = 0; i < 3; i++) {
+        putch(" ", color, col + i, row);
+      }
     } else {
       putch(string, color, col, row);
     }
@@ -144,7 +149,7 @@ void vga::clear_screen(int color)
 {
   for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
     terminal_buffer[i++] = ' ';
-    terminal_buffer[i] = color;
+    terminal_buffer[i] = (char) color;
   }
 
   row = 0;
