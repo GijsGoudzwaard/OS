@@ -2,6 +2,7 @@
 #include "../headers/string.h"
 #include "../headers/common.h"
 #include "../headers/colors.h"
+#include <stdarg.h>
 
 /**
  * Each character takes up two bytes of space in memory.
@@ -21,18 +22,18 @@ int col = 0;
 /**
  * Put a character at a specific location in video memory.
  *
- * @param  const char *string
+ * @param  char c
  * @param  int color
  * @param  int x
  * @param  int y
  * @return void
  */
-void putch(const char *string, int color, int x, int y)
+void putch(char c, int color, int x, int y)
 {
   int mem_location = (y * VGA_WIDTH + x) * 2;
 
-  terminal_buffer[mem_location] = *string;
-  terminal_buffer[++mem_location] = color;
+  terminal_buffer[mem_location] = (char) (c | 0x0f << 8);
+  terminal_buffer[++mem_location] = (char) color;
 
   // Check if we're at the end of the terminal.
   if (++col == VGA_WIDTH) {
@@ -51,7 +52,7 @@ void putch(const char *string, int color, int x, int y)
  */
 void set_cursor(int x, int y)
 {
-  unsigned short position = (y * VGA_WIDTH) + x;
+  int position = (y * VGA_WIDTH) + x;
   // cursor LOW port to vga INDEX register
   outb(0x3D4, 0x0F);
   outb(0x3D5, (unsigned char) (position & 0xFF));
@@ -78,15 +79,15 @@ void write_string(int color, const char *string)
       // Backspace
       if (col > 0) {
         col--;
-        putch(" ", color, col--, row);
+        putch(' ', color, col--, row);
       }
     } else if (*string == '\t') {
       uint8_t i;
       for (i = 0; i < 3; i++) {
-        putch(" ", color, col + i, row);
+        putch(' ', color, col + i, row);
       }
     } else {
-      putch(string, color, col, row);
+      putch(*string, color, col, row);
     }
 
     string++;
@@ -123,20 +124,48 @@ void vga::println(const char *string)
 }
 
 /**
- * Print a string in the middle of the screen.
+ * Prints a formatted output to VGA buffer.
+ * Supports %s and %c at the moment.
  *
- * @param  char *string
- * @return void
+ * @param const char *format
+ * @param ...
  */
-void vga::print_center(char *string)
+void vga::printf(const char *format, ...)
 {
-  int x = (VGA_WIDTH / 2) - (string::length(string) / 2);
+  va_list arg;
+  va_start(arg, format);
 
-  while (*string != 0) {
-    putch(string++, WHITE, x++, row);
+  while (*format != 0) {
+    if (*format == '%') {
+      char type = *(++format);
+
+      switch (type) {
+        case 'c': {
+          int c = va_arg(arg, int);
+          putch((char) c, WHITE, col, row);
+
+          break;
+        }
+        case 's': {
+          char *s = va_arg(arg, char *);
+          vga::print(s);
+
+          break;
+        }
+        default:
+          break;
+      }
+
+      format++;
+      continue;
+    }
+
+    putch(*format, WHITE, col, row);
+    format++;
+    set_cursor(col, row);
   }
 
-  row++;
+  va_end(arg);
 }
 
 /**
@@ -183,17 +212,4 @@ void vga::setup()
 
   // Show the welcome screen.
   welcome_screen();
-}
-
-/**
- * Set the default cursor location (in the bottom left corner).
- *
- * @return void
- */
-void vga::set_default_cursor_location()
-{
-  set_cursor(0, VGA_HEIGHT - 1);
-
-  row = VGA_HEIGHT - 1;
-  col = 0;
 }

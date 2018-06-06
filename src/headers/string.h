@@ -5,7 +5,7 @@ namespace string
 {
   int compare(const char *string1, const char *string2);
 
-  int length(char *string);
+  int length(const char *string);
 
   void append(char *string, char character);
 };

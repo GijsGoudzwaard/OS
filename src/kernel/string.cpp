@@ -1,7 +1,7 @@
 #include "../headers/string.h"
 
 /**
- * Compare two strings, returns 0 if they are equal, 1 of string1 is bigger than string2 and -1 otherwise
+ * Compares two strings, returns 0 if they are equal, 1 of string1 is bigger than string2 and -1 otherwise
  *
  * @param  const char *s1
  * @param  const char *s2
@@ -24,10 +24,10 @@ int string::compare(const char *string1, const char *string2)
 /**
  * Count the length of a string and return it.
  *
- * @param  char *string
+ * @param  const char *string
  * @return int
  */
-int string::length(char *string)
+int string::length(const char *string)
 {
   int length = 0;
 

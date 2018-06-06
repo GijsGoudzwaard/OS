@@ -9,11 +9,9 @@ namespace vga
 
   void print(const char *string);
 
+  void printf(const char *format, ...);
+
   void println(const char *string);
-
-  void print_center(char *string);
-
-  void set_default_cursor_location();
 };
 
 #endif
