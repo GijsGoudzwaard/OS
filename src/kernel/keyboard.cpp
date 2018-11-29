@@ -38,15 +38,11 @@ void keyboard_handler_main(void)
     return;
 
   if (keycode == ENTER_KEY_CODE) {
-//    vga::print("\n\n");
-//    vga::println(row_buffer);
-//    vga::print("\n\n");
-
-    if (string::compare(row_buffer, "help") == 0) {
+    if (string::compare(row_buffer, "help") == string::STATUS_EQUAL) {
       vga::printf("\nAvailable commands: \n");
       vga::printf("\thelp  - Shows the available commands\n");
       vga::printf("\tclear - Clears the screen\n");
-    } else if (string::compare(row_buffer, "clear") == 0) {
+    } else if (string::compare(row_buffer, "clear") == string::STATUS_EQUAL) {
       vga::clear_screen(WHITE);
     } else {
       vga::printf("\nCommand not found\n");

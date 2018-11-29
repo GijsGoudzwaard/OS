@@ -15,10 +15,10 @@ int string::compare(const char *string1, const char *string2)
   }
 
   if (*string1 == *string2) {
-    return 0;
+    return string::STATUS_EQUAL;
   }
 
-  return *string1 < *string2 ? -1 : 1;
+  return *string1 < *string2 ? string::STATUS_SMALLER : string::STATUS_BIGGER;
 }
 
 /**
