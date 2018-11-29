@@ -2,6 +2,7 @@
 #include "../headers/string.h"
 #include "../headers/common.h"
 #include "../headers/colors.h"
+#include "../headers/integer.h"
 #include <stdarg.h>
 
 /**
@@ -62,68 +63,6 @@ void set_cursor(int x, int y)
 }
 
 /**
- * Write a string.
- *
- * @param  int  color
- * @param  const char *string
- * @return void
- */
-void write_string(int color, const char *string)
-{
-  while (*string != 0) {
-    if (*string == '\n') {
-      // New line
-      row++;
-      col = 0;
-    } else if (*string == '\b') {
-      // Backspace
-      if (col > 0) {
-        col--;
-        putch(' ', color, col--, row);
-      }
-    } else if (*string == '\t') {
-      uint8_t i;
-      for (i = 0; i < 3; i++) {
-        putch(' ', color, col + i, row);
-      }
-    } else {
-      putch(*string, color, col, row);
-    }
-
-    string++;
-  }
-
-  set_cursor(col, row);
-}
-
-/**
- * Print a string to the terminal buffer.
- *
- * @param  const char *string
- * @return void
- */
-void vga::print(const char *string)
-{
-  write_string(WHITE, string);
-}
-
-/**
- * Print a string to the terminal buffer and add a new line afterwards.
- *
- * @param  const char *string
- * @return void
- */
-void vga::println(const char *string)
-{
-  write_string(WHITE, string);
-
-  row++;
-  col = 0;
-
-  set_cursor(col, row);
-}
-
-/**
  * Prints a formatted output to VGA buffer.
  * Supports %s and %c at the moment.
  *
@@ -148,11 +87,20 @@ void vga::printf(const char *format, ...)
         }
         case 's': {
           char *s = va_arg(arg, char *);
-          vga::print(s);
+          vga::printf(s);
+
+          break;
+        }
+        case 'd': {
+          int d = va_arg(arg, int);
+          vga::printf(integer::to_ascii(d));
 
           break;
         }
         default:
+          // Print '%' when it can't find a type.
+          // If so it will just be a '%' in the string.
+          putch('%', WHITE, col, row);
           break;
       }
 
@@ -160,7 +108,25 @@ void vga::printf(const char *format, ...)
       continue;
     }
 
-    putch(*format, WHITE, col, row);
+    if (*format == '\n') {
+      // New line
+      row++;
+      col = 0;
+    } else if (*format == '\b') {
+      // Backspace
+      if (col > 0) {
+        col--;
+        putch(' ', WHITE, col--, row);
+      }
+    } else if (*format == '\t') {
+      uint8_t i;
+      for (i = 0; i < 3; i++) {
+        putch(' ', WHITE, col + i, row);
+      }
+    } else {
+      putch(*format, WHITE, col, row);
+    }
+
     format++;
     set_cursor(col, row);
   }
@@ -194,14 +160,14 @@ void vga::clear_screen(int color)
  */
 void welcome_screen()
 {
-  vga::println(" ____________________________________");
-  vga::println("< Welcome to Aperture Science, GLaDOS >");
-  vga::println(" ------------------------------------");
-  vga::println("        \\   ^__^");
-  vga::println("         \\  (oo)\\_______");
-  vga::println("            (__)\\       )\\/\\");
-  vga::println("                ||----w |");
-  vga::println("                ||     ||");
+  vga::printf(" ____________________________________\n");
+  vga::printf("< Welcome to Aperture Science, GLaDOS >\n");
+  vga::printf(" ------------------------------------\n");
+  vga::printf("        \\   ^__^\n");
+  vga::printf("         \\  (oo)\\_______\n");
+  vga::printf("            (__)\\       )\\/\\\n");
+  vga::printf("                ||----w |\n");
+  vga::printf("                ||     ||\n");
 }
 
 void vga::setup()

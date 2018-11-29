@@ -43,13 +43,13 @@ void keyboard_handler_main(void)
 //    vga::print("\n\n");
 
     if (string::compare(row_buffer, "help") == 0) {
-      vga::println("\nAvailable commands: ");
-      vga::println("\thelp  - Shows the available commands");
-      vga::println("\tclear - Clears the screen");
+      vga::printf("\nAvailable commands: \n");
+      vga::printf("\thelp  - Shows the available commands\n");
+      vga::printf("\tclear - Clears the screen\n");
     } else if (string::compare(row_buffer, "clear") == 0) {
       vga::clear_screen(WHITE);
     } else {
-      vga::println("\nCommand not found");
+      vga::printf("\nCommand not found\n");
     }
 
     // Reset the row buffer.
@@ -68,5 +68,5 @@ void keyboard_handler_main(void)
 
   string::append(row_buffer, keyboard_map[keycode]);
 
-  vga::print(key);
+  vga::printf(key);
 }

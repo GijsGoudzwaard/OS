@@ -7,11 +7,7 @@ namespace vga
 
   void clear_screen(int color);
 
-  void print(const char *string);
-
   void printf(const char *format, ...);
-
-  void println(const char *string);
 };
 
 #endif
