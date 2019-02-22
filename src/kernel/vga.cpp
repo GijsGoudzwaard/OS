@@ -31,17 +31,17 @@ int col = 0;
  */
 void putch(char c, int color, int x, int y)
 {
-  int mem_location = (y * VGA_WIDTH + x) * 2;
+    int mem_location = (y * VGA_WIDTH + x) * 2;
 
-  terminal_buffer[mem_location] = (char) (c | 0x0f << 8);
-  terminal_buffer[++mem_location] = (char) color;
+    terminal_buffer[mem_location] = (char) (c | 0x0f << 8);
+    terminal_buffer[++mem_location] = (char) color;
 
-  // Check if we're at the end of the terminal.
-  if (++col == VGA_WIDTH) {
-    // If so set the col back to 0 and add a new line.
-    col = 0;
-    row++;
-  }
+    // Check if we're at the end of the terminal.
+    if (++col == VGA_WIDTH) {
+        // If so set the col back to 0 and add a new line.
+        col = 0;
+        row++;
+    }
 }
 
 /**
@@ -53,13 +53,13 @@ void putch(char c, int color, int x, int y)
  */
 void set_cursor(int x, int y)
 {
-  int position = (y * VGA_WIDTH) + x;
-  // cursor LOW port to vga INDEX register
-  outb(0x3D4, 0x0F);
-  outb(0x3D5, (unsigned char) (position & 0xFF));
-  // cursor HIGH port to vga INDEX register
-  outb(0x3D4, 0x0E);
-  outb(0x3D5, (unsigned char) ((position >> 8) & 0xFF));
+    int position = (y * VGA_WIDTH) + x;
+    // cursor LOW port to vga INDEX register
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (unsigned char) (position & 0xFF));
+    // cursor HIGH port to vga INDEX register
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (unsigned char) ((position >> 8) & 0xFF));
 }
 
 /**
@@ -71,67 +71,67 @@ void set_cursor(int x, int y)
  */
 void vga::printf(const char *format, ...)
 {
-  va_list arg;
-  va_start(arg, format);
+    va_list arg;
+    va_start(arg, format);
 
-  while (*format != 0) {
-    if (*format == '%') {
-      char type = *(++format);
+    while (*format != 0) {
+        if (*format == '%') {
+            char type = *(++format);
 
-      switch (type) {
-        case 'c': {
-          int c = va_arg(arg, int);
-          putch((char) c, WHITE, col, row);
+            switch (type) {
+                case 'c': {
+                    int c = va_arg(arg, int);
+                    putch((char) c, WHITE, col, row);
 
-          break;
+                    break;
+                }
+                case 's': {
+                    char *s = va_arg(arg, char *);
+                    vga::printf(s);
+
+                    break;
+                }
+                case 'd': {
+                    int d = va_arg(arg, int);
+                    vga::printf(integer::to_ascii(d));
+
+                    break;
+                }
+                default:
+                    // Print '%' when it can't find a type.
+                    // If so it will just be a '%' in the string.
+                    putch('%', WHITE, col, row);
+                    break;
+            }
+
+            format++;
+            continue;
         }
-        case 's': {
-          char *s = va_arg(arg, char *);
-          vga::printf(s);
 
-          break;
+        if (*format == '\n') {
+            // New line
+            row++;
+            col = 0;
+        } else if (*format == '\b') {
+            // Backspace
+            if (col > 0) {
+                col--;
+                putch(' ', WHITE, col--, row);
+            }
+        } else if (*format == '\t') {
+            uint8_t i;
+            for (i = 0; i < 3; i++) {
+                putch(' ', WHITE, col + i, row);
+            }
+        } else {
+            putch(*format, WHITE, col, row);
         }
-        case 'd': {
-          int d = va_arg(arg, int);
-          vga::printf(integer::to_ascii(d));
 
-          break;
-        }
-        default:
-          // Print '%' when it can't find a type.
-          // If so it will just be a '%' in the string.
-          putch('%', WHITE, col, row);
-          break;
-      }
-
-      format++;
-      continue;
+        format++;
+        set_cursor(col, row);
     }
 
-    if (*format == '\n') {
-      // New line
-      row++;
-      col = 0;
-    } else if (*format == '\b') {
-      // Backspace
-      if (col > 0) {
-        col--;
-        putch(' ', WHITE, col--, row);
-      }
-    } else if (*format == '\t') {
-      uint8_t i;
-      for (i = 0; i < 3; i++) {
-        putch(' ', WHITE, col + i, row);
-      }
-    } else {
-      putch(*format, WHITE, col, row);
-    }
-
-    format++;
-    set_cursor(col, row);
-  }
-
-  va_end(arg);
+    va_end(arg);
 }
 
 /**
@@ -142,15 +142,15 @@ void vga::printf(const char *format, ...)
  */
 void vga::clear_screen(int color)
 {
-  for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
-    terminal_buffer[i++] = ' ';
-    terminal_buffer[i] = (char) color;
-  }
+    for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
+        terminal_buffer[i++] = ' ';
+        terminal_buffer[i] = (char) color;
+    }
 
-  row = 0;
-  col = 0;
+    row = 0;
+    col = 0;
 
-  set_cursor(row, col);
+    set_cursor(row, col);
 }
 
 /**
@@ -160,22 +160,22 @@ void vga::clear_screen(int color)
  */
 void welcome_screen()
 {
-  vga::printf(" ____________________________________\n");
-  vga::printf("< Welcome to Aperture Science, GLaDOS >\n");
-  vga::printf(" ------------------------------------\n");
-  vga::printf("        \\   ^__^\n");
-  vga::printf("         \\  (oo)\\_______\n");
-  vga::printf("            (__)\\       )\\/\\\n");
-  vga::printf("                ||----w |\n");
-  vga::printf("                ||     ||\n");
+    vga::printf(" ____________________________________\n");
+    vga::printf("< Welcome to Aperture Science, GLaDOS >\n");
+    vga::printf(" ------------------------------------\n");
+    vga::printf("        \\   ^__^\n");
+    vga::printf("         \\  (oo)\\_______\n");
+    vga::printf("            (__)\\       )\\/\\\n");
+    vga::printf("                ||----w |\n");
+    vga::printf("                ||     ||\n");
 }
 
 void vga::setup()
 {
-  // Clear the default text that is set in qemu.
-  // TODO: Set the color parameter to the default background color.
-  clear_screen(WHITE);
+    // Clear the default text that is set in qemu.
+    // TODO: Set the color parameter to the default background color.
+    clear_screen(WHITE);
 
-  // Show the welcome screen.
-  welcome_screen();
+    // Show the welcome screen.
+    welcome_screen();
 }

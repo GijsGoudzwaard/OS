@@ -3,11 +3,11 @@
 
 namespace vga
 {
-  void setup();
+    void setup();
 
-  void clear_screen(int color);
+    void clear_screen(int color);
 
-  void printf(const char *format, ...);
+    void printf(const char *format, ...);
 };
 
 #endif

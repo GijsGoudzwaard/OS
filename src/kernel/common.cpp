@@ -13,7 +13,7 @@
  */
 extern "C" void outb(unsigned short port, unsigned char value)
 {
-	asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));
+    asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));
 }
 
 /**
@@ -24,8 +24,8 @@ extern "C" void outb(unsigned short port, unsigned char value)
  */
 extern "C" unsigned char inb(unsigned short port)
 {
-	unsigned char value;
-	asm volatile ("inb %1, %0" : "=a" (value) : "Nd" (port));
+    unsigned char value;
+    asm volatile ("inb %1, %0" : "=a" (value) : "Nd" (port));
 
-	return value;
+    return value;
 }

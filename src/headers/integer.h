@@ -4,7 +4,7 @@
 
 namespace integer
 {
-  char * to_ascii(int i);
+    char *to_ascii(int i);
 };
 
 
