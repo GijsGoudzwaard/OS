@@ -1,5 +1,11 @@
 #include "../headers/integer.h"
 
+/**
+ * Converts a given integer to its ascii representative.
+ *
+ * @param  int i
+ * @return char *
+ */
 char *integer::to_ascii(int i)
 {
     char const digit[] = "0123456789";

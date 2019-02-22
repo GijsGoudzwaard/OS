@@ -64,7 +64,7 @@ void set_cursor(int x, int y)
 
 /**
  * Prints a formatted output to VGA buffer.
- * Supports %s and %c at the moment.
+ * Supports %s (string), %c (char) and %d (decimal) at the moment.
  *
  * @param const char *format
  * @param ...
@@ -160,9 +160,10 @@ void vga::clear_screen(int color)
  */
 void welcome_screen()
 {
-    vga::printf(" ____________________________________\n");
-    vga::printf("< Welcome to Aperture Science, GLaDOS >\n");
-    vga::printf(" ------------------------------------\n");
+    vga::printf(" ____________________________________________\n");
+    vga::printf("/ Hi there, welcome to my OS                 \\\n");
+    vga::printf("\\ Type 'help' to show all available commands /\n");
+    vga::printf(" --------------------------------------------\n");
     vga::printf("        \\   ^__^\n");
     vga::printf("         \\  (oo)\\_______\n");
     vga::printf("            (__)\\       )\\/\\\n");

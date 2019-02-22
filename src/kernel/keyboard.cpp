@@ -45,7 +45,7 @@ void keyboard_handler_main(void)
         } else if (string::compare(row_buffer, "clear") == string::STATUS_EQUAL) {
             vga::clear_screen(WHITE);
         } else {
-            vga::printf("\nCommand not found\n");
+            vga::printf("\nCommand '%s' not found\n", row_buffer);
         }
 
         // Reset the row buffer.

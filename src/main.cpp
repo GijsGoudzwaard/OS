@@ -15,5 +15,6 @@ void kernel_start(void)
     idt_init();
     kb_init();
 
+    // Keep the program alive.
     while (1);
 }
